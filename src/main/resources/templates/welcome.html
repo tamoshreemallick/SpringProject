@@ -5,7 +5,19 @@
   <title>CBT Dashboard</title>
 </head>
 <body>
+<style>
+  td{
+    font-weight:bold;
+  }
+</style>
 <h1>CBT Dashboard</h1>
 <h2>Welcome <span th:text="${session.username}"></span></h2>
+<table>
+  <tr><td>First Name: </td><td><span th:text="${session.fname}"></td></tr>
+  <tr><td>Last Name: </td><td><span th:text="${session.lname}"></td></tr>
+  <tr><td>Email: </td><td><span th:text="${session.email}"></td></tr>
+  <tr><td>Phone: </td><td><span th:text="${session.phone}"></td></tr>
+</table>
+
 </body>
 </html>

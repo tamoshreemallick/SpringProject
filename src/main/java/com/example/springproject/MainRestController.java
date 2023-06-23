@@ -2,6 +2,7 @@ package com.example.springproject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,13 +43,16 @@ public class MainRestController {
 
     @PostMapping("/login")
 
-    public String login(@RequestParam("username")String username,@RequestParam("password")String password, HttpSession session){
+    public String login(@RequestParam("username")String username,@RequestParam("password")String password, HttpSession session, Model model){
 
         Optional<Credential> credValue=credentialRepository.findById(username);
         if(credValue.isPresent()) {
             if (credValue.get().getPassword().equals(password)) {
-
                 session.setAttribute("username",username);
+                Optional<Userdetail> useValue=userdetailRepository.findById(username);
+                if(useValue.isPresent()){
+                    model.addAttribute("userdetail",useValue.get());
+                }
                 return "dashboard";
             }
             else {
@@ -61,7 +65,7 @@ public class MainRestController {
     }
 
     @PostMapping("/signupp")
-    public String signupp(@RequestParam("username")String username,@RequestParam("fname")String fname,@RequestParam("lname")String lname,@RequestParam("email")String email,@RequestParam("phone") String phone){
+    public String signupp(@RequestParam("username")String username,@RequestParam("fname")String fname,@RequestParam("lname")String lname,@RequestParam("email")String email,@RequestParam("phone") String phone, HttpSession session){
         Userdetail userdetail = new Userdetail();
         userdetail.setUsername(username);
         userdetail.setFname(fname);
@@ -69,7 +73,12 @@ public class MainRestController {
         userdetail.setEmail(email);
         userdetail.setPhone(phone);
         userdetailRepository.save(userdetail);
-        return "dashboard";
+        session.setAttribute("username",username);
+        session.setAttribute("fname",fname);
+        session.setAttribute("lname",lname);
+        session.setAttribute("email",email);
+        session.setAttribute("phone",phone);
+        return "welcome";
     }
 
 
