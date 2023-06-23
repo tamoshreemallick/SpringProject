@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seller Dashboard</title>
+</head>
+<body>
+<style>
+  td{
+    font-weight:bold;
+  }
+</style>
+<h1>Buyer Dashboard</h1>
+<h2>Welcome <span th:text="${session.username}"></span></h2>
+<table>
+  <tr><td>First Name: </td><td><span th:text="${userdetail.fname}"></td></tr>
+  <tr><td>Last Name: </td><td><span th:text="${userdetail.lname}"></td></tr>
+  <tr><td>Email: </td><td><span th:text="${userdetail.email}"></td></tr>
+  <tr><td>Phone: </td><td><span th:text="${userdetail.phone}"></td></tr>
+</table>
+
+</body>
+</html>

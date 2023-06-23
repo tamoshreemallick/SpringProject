@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -22,6 +23,9 @@ public class MainRestController {
 
     @Autowired
     UserdetailRepository userdetailRepository;
+
+    @Autowired
+    UsertypelinkRepository usertypelinkRepository;
 
 
     @GetMapping("/")
@@ -50,10 +54,27 @@ public class MainRestController {
             if (credValue.get().getPassword().equals(password)) {
                 session.setAttribute("username",username);
                 Optional<Userdetail> useValue=userdetailRepository.findById(username);
+                List<Usertypelink> usertypes =usertypelinkRepository.findAll();
+                Optional<Usertypelink> usertype = usertypes.stream().filter(usertype1 -> usertype1.getUsername().equals(username)).findAny();
                 if(useValue.isPresent()){
                     model.addAttribute("userdetail",useValue.get());
+                    if (usertype.isPresent())
+                    {
+                        if (usertype.get().getType().equals("BUYER")){
+                            return "buyerdashboard";
+                        }
+                        else if (usertype.get().getType().equals
+                                ("SELLER")){
+                            return "sellerdashboard";
+                        }
+                        else
+                            return "typeform";
+                    }
+                    else
+                        return "typeform";
                 }
-                return "dashboard";
+                else
+                    return "signup2";
             }
             else {
                 return "landingpage";
@@ -78,6 +99,19 @@ public class MainRestController {
         session.setAttribute("lname",lname);
         session.setAttribute("email",email);
         session.setAttribute("phone",phone);
+        return "typeform";
+    }
+
+    @PostMapping("/signuppp")
+    public String signupp(@RequestParam("username")String username,@RequestParam("userid")String userid,@RequestParam("type")String type, HttpSession session){
+        Usertypelink usertype = new Usertypelink();
+        usertype.setUsername(username);
+        usertype.setUserid(userid);
+        usertype.setType(type);
+        usertypelinkRepository.save(usertype);
+        session.setAttribute("username",username);
+        session.setAttribute("userid",userid);
+        session.setAttribute("type",type);
         return "welcome";
     }
 
